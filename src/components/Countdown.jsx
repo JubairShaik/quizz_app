@@ -5,7 +5,7 @@ import { useCountdown } from '../hooks/useCountdown.js';
 
 const Countdown = ({ onGoClick }) => {
 
-  const countdown = useCountdown(1);
+  const countdown = useCountdown(3);
 
   return (
     <motion.div

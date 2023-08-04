@@ -1,5 +1,5 @@
 const playSound = (sound) => {
-  const audio = new Audio(`/src/public/sounds/${sound}`);
+  const audio = new Audio(`https://myquizzapp-ten.vercel.app/src/public/sounds/${sound}`);
   audio.play();
 
   // If page changes, stop playing sound
