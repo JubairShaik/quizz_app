@@ -5,16 +5,15 @@ import { Tick, Close } from '../icons/index.js';
 
 
 const correctAnswerBadge = (
-  <div className="bg-brand-paris-green text-white px-3 py-2 flex items-center justify-center space-x-2 rounded-[53px]">
+  <div className="bg-brand-paris-green text-white  p-1 flex items-center justify-center space-x-2 rounded-[53px]">
     <Tick />
-    <p className="text-xs font-jakarta font-medium">Correct answer</p>
   </div>
 );
 
 const wrongAnswerBadge = (
-  <div className="bg-red-500 text-white px-3 py-2 flex items-center justify-center space-x-2 rounded-[53px]">
+  <div className="bg-red-500 text-white p-1  flex items-center justify-center space-x-2 rounded-[53px]">
     <Close />
-    <p className="text-xs font-medium">Your answer</p>
+    
   </div>
 );
 
@@ -42,7 +41,7 @@ export const OptionList = ({
 
     if (selectedAnswerIndex === idx) {
       return (
-        <div className="absolute top-[50%] -translate-y-1/2 right-2 z-10">
+        <div className="absolute top-[50%]  -translate-y-1/2 right-2 z-10">
           {isCorrectAnswer ? correctAnswerBadge : wrongAnswerBadge}
         </div>
       );

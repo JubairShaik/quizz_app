@@ -12,11 +12,11 @@ const Countdown = ({ onGoClick }) => {
       key="countdown"
       variants={{
         initial: {
-          background: '#f4918e',
+          background: '#0000ff',
           clipPath: 'circle(0% at 50% 50%)',
         },
         animate: {
-          background: '#FF6A66',
+          background: '#0080ff',
           clipPath: 'circle(100% at 50% 50%)',
         },
       }}

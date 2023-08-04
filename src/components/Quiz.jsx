@@ -203,7 +203,7 @@ const Quiz = () => {
             />
           </div>
 
-          <h4 className="text-brand-midnight font-normal  md:mt-12 md:mb-8 md:font-semibold text-[1.4rem] md:text-[2rem] mt-[34px]">
+          <h4 className="text-brand-midnight font-normal  md:mt-12 md:mb-8 md:font-semibold text-[1.2rem] md:text-[2rem] mt-[34px]">
             {question}
           </h4>
         </div>
@@ -234,8 +234,8 @@ const Quiz = () => {
                 transition={{ duration: 0.5 }}
               > 
                 <div className="flex flex-col items-start" >
-                  <h3 className="text-[20px] md:text-[27px] font-semibold mt-2 mb-1 md:font-bold" >{option}</h3>
-                <p className="text-green-500 text-start font-normal text-[18px] md:text-[23px]">
+                  <h3 className="text-[20px] text-green-500 md:text-[27px] font-semibold mt-2 mb-1 md:font-bold" >{option}</h3>
+                <p className=" text-start font-normal text-[18px] md:text-[23px]">
                   {explanation}
                 </p>
 
@@ -269,6 +269,9 @@ const Quiz = () => {
                 transition={{ duration: 1 }}
               />
             </div>
+
+
+
             {/* End time */}
             
             <span className="  text-sm text-slate-900 font-normal">
