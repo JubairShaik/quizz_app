@@ -13,5 +13,89 @@
 }
 
 
+.mybox{
+  
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
 
  
+
+
+/* Add this CSS to your stylesheet */
+/* Custom styles for the ToastContainer */
+.Toastify__toast-container {
+  z-index: 9999;
+  pointer-events: none;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+
+/* Custom styles for each Toast */
+.Toastify__toast {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #333;
+  color: #fff;
+  padding: 14px 22px;
+}
+
+.Toastify__toast--success {
+  background-color: #5cb85c;
+}
+
+.Toastify__toast--error {
+  background-color: #d9534f;
+}
+
+.Toastify__toast-body {
+  margin-right: 10px;
+}
+
+.Toastify__progress-bar {
+  background: rgba(17, 16, 16, 0.3);
+}
+
+/* Custom styles for the close button */
+.Toastify__close-button {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  padding: 0;
+  margin: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+ 
+.Toastify__close-button:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.Toastify__close-button:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.Toastify__close-button:hover:before, .Toastify__close-button:hover:after {
+  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
+}
+
+.Toastify__close-button:focus {
+  outline: none;
+}
+
+.Toastify__close-button--success:before, .Toastify__close-button--success:after {
+  background-color: #fff;
+}
+
+.Toastify__close-button--error:before, .Toastify__close-button--error:after {
+  background-color: #fff;
+}

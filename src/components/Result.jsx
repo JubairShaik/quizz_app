@@ -18,7 +18,7 @@ const Result = ({ results, totalQuestions }) => {
       key={'result'}
       variants={{
         initial: {
-          background: '#FF6A66',
+          background: '#ff6444',
           clipPath: 'circle(0% at 50% 50%)',
         },
         animate: {
@@ -26,7 +26,7 @@ const Result = ({ results, totalQuestions }) => {
           clipPath: 'circle(100% at 50% 50%)',
         },
       }}
-      className="w-full h-fu h-screen flex justify-center p-5"
+      className="w-full h-fu h-screen  md:px-[10rem] flex justify-center p-5"
       initial="initial"
       animate="animate"
       exit="exit"
@@ -104,7 +104,7 @@ const Result = ({ results, totalQuestions }) => {
             intent={'secondary'}
             size="small"
             block
-            className="mt-6"
+            className="mt-6  rounded-xl md:font-semibold font-normal"
             onClick={handleRetry}
           >
             Try Again

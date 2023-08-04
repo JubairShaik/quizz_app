@@ -1,54 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { quizQuestions } from "../content/content.js";
-import Button from "./Button";
-import uiux from "../public/uiux6.avif";
 import { OptionList } from "./OptionList";
 import { formatTime } from "../utils/formatTime";
 import Result from "./Result";
+import Button from "./Button";
+import { ToastContainer } from "react-toastify";
+import { showCorrectAnswerToast, showIncorrectAnswerToast } from "../utils/toarstHelper.js";
 
-// const quizQuestions = [
-
-//     {
-
-//       question: "What does the term 'Information Architecture' refer to in UX design?",
-
-//       imageUrl:uiux,
-//       options: [
-//         "A. Designing visually appealing graphics",
-//         "B. Organizing and structuring content for better usability",
-//         "C. Creating responsive layouts for mobile devices",
-//         "D. Conducting user interviews and surveys"
-//       ],
-//       correctAnswer: "B. Organizing and structuring content for better usability",
-//       explanation: "The correct answer is B. Information Architecture involves organizing and structuring content in a clear and intuitive way to improve usability. It focuses on creating a coherent navigation system, labeling, and categorizing content to help users find information easily."
-//     },
-
-// ]
 
 import {
   playCorrectAnswer,
   playWrongAnswer,
   playQuizEnd,
-} from "../utils/playSound";
+} from "../utils/playSound.js";
 
 const TIME_LIMIT = 30; // 30 Seconds per question
 
-export const Quiz = () => {
+const Quiz = () => {
   const timerRef = useRef(null);
 
   const [timePassed, setTimePassed] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1);
   const [quizFinished, setQuizFinished] = useState(false);
-  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [answered, setAnswered] = useState(false);
-
-
-  // const [activeQuestion, setActiveQuestion] = useState(0);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const [results, setResults] = useState({
     correctAnswers: 0,
@@ -84,29 +61,16 @@ export const Quiz = () => {
     if (quizFinished) return;
 
     if (timePassed > TIME_LIMIT) {
-      // The time limit has been reached for this question
-      // So the answer will be considered wrong
-
-      // Update results
-      if (selectedAnswerIndex === -1) {
-        setResults((prev) => ({
-          ...prev,
-          secondsUsed: prev.secondsUsed + TIME_LIMIT,
-          wrongAnswers: prev.wrongAnswers + 1,
-        }));
-      }
-
       handleNextQuestion();
-      // Restart timer
+      // Restart timer for the next Question
       setTimePassed(0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timePassed]);
 
   const handleNextQuestion = () => {
-    // Reset selected answer
+    // Reset selected answer and explanation
     setSelectedAnswerIndex(-1);
-    setShowExplanation(true);
+    setShowExplanation(false);
 
     // Check if quiz finished
     if (activeQuestion + 1 >= quizQuestions.length) {
@@ -122,10 +86,18 @@ export const Quiz = () => {
     // Reset timer
     setupTimer();
     setTimePassed(0);
+
+    // Reset the states for the next question
+    setShowExplanation(false);
+    setIsAnswerCorrect(false);
   };
 
+
+
+
+
   const handleSelectAnswer = (answerIndex) => {
-    //  Stop timer
+    // Stop timer
     clearInterval(timerRef.current);
     setSelectedAnswerIndex(answerIndex);
 
@@ -143,10 +115,8 @@ export const Quiz = () => {
         correctAnswers: prev.correctAnswers + 1,
       }));
 
-      setIsCorrectAnswer(true);
-      setIsAnswerCorrect(true); // Set the state to indicate the answer is correct
-
-
+      setIsAnswerCorrect(true);
+      showCorrectAnswerToast();
     } else {
       console.log("Wrong answer!");
       playWrongAnswer();
@@ -156,13 +126,21 @@ export const Quiz = () => {
         secondsUsed: prev.secondsUsed + timePassed,
         wrongAnswers: prev.wrongAnswers + 1,
       }));
-      setIsCorrectAnswer(false);
-      setIsAnswerCorrect(false); // Set the state to indicate the answer is wrong
+
+      setIsAnswerCorrect(false);
+      showIncorrectAnswerToast(); // Show the toast notification for an incorrect answer
     }
+
+    // Show the explanation after a delay
+    setTimeout(() => {
+      setShowExplanation(true);
+    }, 2000);
     
   };
 
-  const { question, options } = quizQuestions[activeQuestion];
+
+
+  const { question, options, explanation ,option } = quizQuestions[activeQuestion];
   const numberOfQuestions = quizQuestions.length;
 
   if (quizFinished) {
@@ -184,134 +162,136 @@ export const Quiz = () => {
           clipPath: "circle(100% at 50% 50%)",
         },
       }}
-      className="w-full h-full md:px-[10rem]  flex justify-center p-5"
+      className="w-full h-full md:px-[10rem]  flex justify-center  px-5 py-3"
       initial="initial"
       animate="animate"
       exit="exit"
       transition={{ duration: 0.5 }}
     >
-      <div className="flex flex-col text-black font-bold text-[32px]  text-center w-full">
-        <h1 className="font-bold text-base text-brand-cerulean-blue">
-          QuizApp
-        </h1>
-        <div className="mt-6 rounded-2xl border border-brand-light-gray px-7 py-4 w-full mb-1">
-          <h3 className="text-black font-medium text-sm">
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
+
+
+      <div className="flex flex-col text-black font-bold text-[30px]  text-center w-full">
+       
+        <div className=" rounded-2xl border border-brand-light-gray px-3  md:px-7 my:py-4 w-full mb-1">
+          <h3 className="text-black  md:mt-8 mt-2  font-medium text-[16px]">
             Question {activeQuestion + 1} / {numberOfQuestions}
           </h3>
 
-          {isAnswerCorrect && (
-            <motion.div
-              className="absolute top-10  flex items-center justify-center  m-5 0 h-12 w-12 bg-green-500 rounded-full"
-              style={{
-                marginTop: "-10px",
-                transform: `translateX(${progressWidth}%)`,
-              }}
-              initial={{ opacity: 0, scaleX: 0, scaleY: 0 }}
-              animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="w-3 h-3  rounded-full text-green-200  flex items-center justify-center  p-4  font-normal">
-                <h3 className="p-5 text-2xl">+10</h3>
-              </div>
-            </motion.div>
-          )}
+
+
 
           {/* Progress Bar */}
-          <div className="relative w-full h-2 mt-2 bg-brand-light-gray rounded-md overflow-hidden">
+          <div className="relative w-full   sja h-2 mt-2 md:mt-5 bg-slate-300 rounded-md overflow-hidden">
             <motion.div
               className="absolute top-0 left-0 h-full bg-brand-cerulean-blue rounded-md"
               initial={{ width: "0%" }}
               animate={{ width: `${progressWidth}%` }}
               transition={{ duration: 0.5 }}
             />
-            {/* Indicate correct answer with circular bulb */}
           </div>
 
-          <div
-            key={activeQuestion}
-            className="flex justify-center items-center w-full mt-[18px]"
-          >
-            {/* Start time */}
-            <span className="text-brand-mountain-mist text-xs font-normal">
-              {formatTime(timePassed)}
-            </span>
-
-            {/* Bar */}
-            <div className="relative flex-1 h-3 bg-[#F0F0F0] mx-1 rounded-full">
-              <motion.div
-                className="absolute top-0 left-0 h-full bg-brand-cerulean-blue rounded-full"
-                initial={{ width: "0%" }}
-                animate={{ width: `${(timePassed / TIME_LIMIT) * 100}%` }}
-                transition={{ duration: 1 }}
-              />
-            </div>
-            {/* End time */}
-            <span className="text-brand-mountain-mist text-xs font-normal">
-              {formatTime(TIME_LIMIT)}
-            </span>
-          </div>
-
-          <h4 className="text-brand-midnight font-medium text-base mt-[34px]">
+          <h4 className="text-brand-midnight font-normal  md:mt-12 md:mb-8 md:font-semibold text-[1.4rem] md:text-[2rem] mt-[34px]">
             {question}
           </h4>
         </div>
 
-        <div className="flex items-center lg:flex-row gap-4 m6 md:m-10 flex-col justify-center ">
-          <div className="flex rounded-xl h-[20rem]  items-center justify-center   first-letter:  shadow-2xl   overflow-hidden  flex-1">
+
+
+
+        <div className="flex items-center lg:flex-row gap-4 mt-6 md:m-10 flex-col justify-center">
+
+          
+          <div className="flex rounded-xl md:h-[20rem]  items-center justify-center  mybox  overflow-hidden flex-1">
             <img
-              className="     rounded-2xl flex h-full w-full  object-cover  "
+              className="  flex h-full w-full object-cover"
               src={quizQuestions[activeQuestion]?.imageUrl}
+              alt="Quiz Question"
             />
           </div>
 
 
 
+          <div className="flex flex-1 mx-1">
+            {showExplanation ? (
+              <motion.div
+                key="explanation"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.5 }}
+              > 
+                <div className="flex flex-col items-start" >
+                  <h3 className="text-[20px] md:text-[27px] font-semibold mt-2 mb-1 md:font-bold" >{option}</h3>
+                <p className="text-green-500 text-start font-normal text-[18px] md:text-[23px]">
+                  {explanation}
+                </p>
 
-          <div className="flex flex-1">
-            {answered ? (
-              <p className="text-green-500 text-start font-normal text-[25px]">
-                {quizQuestions[activeQuestion]?.explanation}
-              </p>
+                </div>
+                
+              </motion.div>
             ) : (
               <OptionList
                 activeQuestion={quizQuestions[activeQuestion]}
                 options={options}
                 selectedAnswerIndex={selectedAnswerIndex}
                 onAnswerSelected={handleSelectAnswer}
-                isCorrectAnswer={isCorrectAnswer}
+                isAnswerCorrect={isAnswerCorrect}
               />
             )}
           </div>
-
-          {/* 
-          
-          <div className="flex flex-1">
-
-
-            <p className="text-green-500 text-start  font-normal text-[25px]">
-              {quizQuestions[activeQuestion]?.explanation}
-            </p>
-
-            <OptionList
-              activeQuestion={quizQuestions[activeQuestion]}
-              options={options}
-              selectedAnswerIndex={selectedAnswerIndex}
-              onAnswerSelected={handleSelectAnswer}
-              isCorrectAnswer={isCorrectAnswer}
-            />
-          </div> */}
         </div>
 
-        <div className="mt-auto w-full z-10">
-          <Button
-            disabled={selectedAnswerIndex === -1}
-            block
-            className="bg-green-600 cursor-pointer text-white"
-            onClick={handleNextQuestion}
-          >
-            Next
-          </Button>
-        </div>
+  
+        <div className="flex justify-center items-center w-full mt-[18px]">
+            {/* Start time */}
+            <span className="text-brand-mountain-mist text-xs font-normal">
+              {formatTime(timePassed)}
+            </span>
+            {/* Bar */}
+            <div className="relative flex-1 h-3 bg-[#F0F0F0] mx-1 rounded-full">
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
+                initial={{ width: "0%" }}
+                animate={{ width: `${(timePassed / TIME_LIMIT) * 100}%` }}
+                transition={{ duration: 1 }}
+              />
+            </div>
+            {/* End time */}
+            
+            <span className="  text-sm text-slate-900 font-normal">
+              {formatTime(TIME_LIMIT)}
+            </span>
+            </div>
+
+        <motion.div
+          className="mt-auto w-full z-10"
+          animate={{ opacity: showExplanation ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {showExplanation && (
+            <Button
+              block
+              className="bg-green-500 my-6 md:text-[25px] mt-10 
+               md:mt-5 text-[20px] py-[0.6rem] md:py-[0.2rem] font-normal rounded-md cursor-pointer text-white"
+              onClick={handleNextQuestion}
+            >
+              Next Question  
+            </Button>
+          )}
+        </motion.div>
       </div>
     </motion.div>
   );
