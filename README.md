@@ -1,5 +1,5 @@
  ![myimg](https://github.com/JubairShaik/quizz_app/assets/104702942/13d726ab-52e9-4e92-a750-1c980c2dae6f)
-Sure! Below is a basic template for the README documentation for your project:
+ 
 
 # QuizApp
 
